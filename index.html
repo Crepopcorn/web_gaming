@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Moving Box Game</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: #fff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #2a2a72;
+            margin-bottom: 20px;
+        }
+
+        #moving-box {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #f39c12;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #score {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        #start-button {
+            padding: 10px 30px;
+            font-size: 1.2em;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #start-button:hover {
+            background-color: #c0392b;
+        }
+
+        #instructions {
+            font-size: 1em;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Catch the Moving Box</h1>
+    <p>Click the moving box as many times as you can within 15 seconds!</p>
+
+    <div id="game-container">
+        <div id="moving-box"></div>
+    </div>
+
+    <div id="score">Score: 0</div>
+    <button id="start-button">Start Game</button>
+
+    <div id="instructions">
+        Instructions: Click on the yellow box to score points. The box will move faster as time goes on. Good luck!
+    </div>
+
+    <script>
+        let score = 0;
+        let gameActive = false;
+        let timer;
+        let speed = 1500;
+
+        const movingBox = document.getElementById('moving-box');
+        const scoreDisplay = document.getElementById('score');
+        const startButton = document.getElementById('start-button');
+        const gameContainer = document.getElementById('game-container');
+
+        movingBox.addEventListener('click', () => {
+            if (gameActive) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                moveBox();
+                if (speed > 500) {
+                    speed -= 100;
+                }
+            }
+        });
+
+        startButton.addEventListener('click', () => {
+            score = 0;
+            scoreDisplay.innerText = `Score: 0`;
+            gameActive = true;
+            startButton.disabled = true;
+            moveBox();
+            timer = setTimeout(endGame, 15000); // 15 seconds
+        });
+
+        function moveBox() {
+            const maxX = gameContainer.clientWidth - movingBox.clientWidth;
+            const maxY = gameContainer.clientHeight - movingBox.clientHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            movingBox.style.left = `${randomX}px`;
+            movingBox.style.top = `${randomY}px`;
+        }
+
+        function endGame() {
+            gameActive = false;
+            startButton.disabled = false;
+            alert(`Time's up! Your final score is ${score}`);
+        }
+    </script>
+
+</body>
+</html>
